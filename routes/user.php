@@ -12,6 +12,7 @@ use App\Http\Controllers\User\VerifyController;
 use App\Http\Controllers\User\SomeController;
 use App\Http\Controllers\User\SocialLoginController;
 use App\Http\Controllers\User\ExchangeController;
+use App\Http\Controllers\CoinPaymentsAPI;
 
 // Email verification routes
 Route::get('/verify-email', 'App\Http\Controllers\User\UsersController@verifyemail')->middleware('auth')->name('verification.notice');;
@@ -43,7 +44,6 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(func
 	Route::get('notification', [ViewsController::class, 'notification'])->name('notification');
 	Route::get('support', [ViewsController::class, 'support'])->name('support');
 	Route::get('deposits', [ViewsController::class, 'deposits'])->name('deposits');
-	Route::get('skip_account', [ViewsController::class, 'skip_account']);
 	Route::post('virtual-card/request', [\App\Http\Controllers\User\VirtualCardController::class, 'store'])->name('virtualcard.request');
 	
 	Route::get('tradinghistory',[ViewsController::class, 'tradinghistory'])->name('tradinghistory');
@@ -91,7 +91,7 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('dashboard')->group(func
 
 	// Investment, user buys plan
 	Route::post('joinplan', [UserInvPlanController::class, 'joinplan'])->name('joinplan');
-	Route::get('autoconfirm', 'CoinPaymentsAPI@autoconfirm')->name('autoconfirm');
+	        Route::get('autoconfirm', [CoinPaymentsAPI::class, 'autoconfirm'])->name('autoconfirm');
 
 	// Verify account route
 	Route::post('verifyaccount', [VerifyController::class, 'verifyaccount'])->name('kycsubmit');

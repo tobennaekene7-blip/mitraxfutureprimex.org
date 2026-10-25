@@ -86,7 +86,7 @@ if (Auth('admin')->User()->dashboard_style == "light") {
 												<h3 class="text-{{$text}}">Check your email with the KYC upload that has an attachment name of 
 												<span class="text-danger">{{$list->id_card}}</span></h3>
 											@elseif($settings->location == "Local")
-												<img src="{{ asset('storage/app/public/photos/'.$list->id_card)}}" alt="ID Card" title="" class="img-fluid" />
+												<img src="{{ asset('storage/photos/'.$list->id_card)}}" alt="ID Card" title="" class="img-fluid" />
 											@else
 												@php
 												$path = 'storage/'.$list->id_card;
@@ -122,7 +122,7 @@ if (Auth('admin')->User()->dashboard_style == "light") {
 												<h3 class="text-{{$text}}">Check your email with the KYC upload that has an attachment name of 
 													<span class="text-danger">{{$list->passport}}</span></h3>
 											@elseif($settings->location == "Local")
-												<img src="{{ asset('storage/app/public/photos/'.$list->passport)}}" alt="Passport" title="" class="img-fluid" />
+												<img src="{{ asset('storage/photos/'.$list->passport)}}" alt="Passport" title="" class="img-fluid" />
 											@else
 												@php
 												$ppath = 'storage/'.$list->passport;

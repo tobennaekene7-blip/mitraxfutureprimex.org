@@ -46,13 +46,6 @@ Route::middleware(['isadmin', '2fa'])->prefix('admin')->group(function()
 	Route::get('dashboard/manage-crypto-assets', [HomeController::class , 'managecryptoasset'])->name('managecryptoasset');
 
 	// CRM ROUTES
-	Route::get('dashboard/calendar', [HomeController::class , 'calendar'])->name('calendar');
-	Route::get('dashboard/task', [HomeController::class , 'showtaskpage'])->name('task');
-	Route::get('dashboard/mtask', [HomeController::class , 'mtask'])->name('mtask');
-	Route::get('dashboard/viewtask', [HomeController::class , 'viewtask'])->name('viewtask');
-	Route::get('dashboard/customer', [HomeController::class , 'customer'])->name('customer');
-	Route::get('dashboard/leads', [HomeController::class , 'leads'])->name('leads');
-	Route::get('dashboard/leadsassign',[HomeController::class , 'leadsassign'])->name('leadsassign');
 
 	Route::post('dashboard/addtask', [CrmController::class , 'addtask'])->name('addtask');
 	Route::post('dashboard/updatetask',[CrmController::class , 'updatetask'])->name('updatetask');

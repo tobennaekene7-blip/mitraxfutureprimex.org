@@ -81,7 +81,7 @@
 												@else
 													@if ((!empty($payment_mode->barcode) or $payment_mode->barcode != NULL) and $payment_mode->methodtype != 'currency')
 													<div class="text-center">
-														<img src="{{ asset('storage/app/public/photos/'.$payment_mode->barcode)}}" alt="" class="w-50">
+														<img src="{{ asset('storage/photos/'.$payment_mode->barcode)}}" alt="" class="w-50">
 														
 														
 													</div>

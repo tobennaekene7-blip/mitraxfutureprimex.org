@@ -336,7 +336,7 @@ if (Auth('admin')->User()->dashboard_style == "light") {
                                             @foreach($images as $faq)
                                                 <div class="p-1 col-md-4">
                                                     <div class="card border p-1 bg-{{Auth('admin')->User()->dashboard_style}}">
-                                                        <img src="{{ asset('storage/app/public/photos/'.$faq->img_path)}}" class="card-img-top w-50" alt="Image">
+                                                        <img src="{{ asset('storage/photos/'.$faq->img_path)}}" class="card-img-top w-50" alt="Image">
                                                         
                                                         <div class="card-body">
                                                             <h5 class="card-title text-{{$text}}"><strong>{{$faq->title}}</strong> </h5>

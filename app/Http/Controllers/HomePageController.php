@@ -87,7 +87,7 @@ class HomePageController extends Controller
         if ($terms->useterms == 'no') {
            return redirect()->back();
         }
-        return view('home.privacy')
+        return view('home.terms')
         ->with(array(
             'mplans' => Plans::where('type','Main')->get(),
             'title' => 'Privacy Policy',

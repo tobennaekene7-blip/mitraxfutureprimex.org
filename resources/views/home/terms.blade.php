@@ -1,5 +1,7 @@
 @extends('layouts.base')
 
+@inject('content', 'App\Http\Controllers\FrontController')
+
 @section('title', 'Terms')
 
 @section('styles')

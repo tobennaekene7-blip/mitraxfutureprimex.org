@@ -18,7 +18,7 @@ if (Auth::check() && Auth::user()->dashboard_style == "light") {
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{$settings->site_name}} | {{$title}}</title>
-    <link rel="icon" href="{{ asset('storage/app/public/photos/'.$settings->favicon)}}" type="image/png"/>
+    <link rel="icon" href="{{ $settings->favicon_url }}" type="image/png"/>
 	
 	@section('styles')
 			<!-- Fonts and icons -->

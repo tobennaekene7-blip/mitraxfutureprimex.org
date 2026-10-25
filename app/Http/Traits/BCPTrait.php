@@ -7,19 +7,14 @@
 namespace App\Http\Controllers;
 namespace App\Http\Traits;
 
-use App\agents;
-use App\users;
-use App\settings;
-use App\confirmations;
-use App\gh;
-use App\ph;
-use App\plans;
-use App\account;
-use App\cp_transactions;
-use App\tp_transactions;
-use App\user_plans;
-use App\deposits;
-use App\withdrawals;
+use App\Models\Agent;
+use App\Models\User;
+use App\Models\Settings;
+use App\Models\Plans;
+use App\Models\Cp_transaction;
+use App\Models\User_plans;
+use App\Models\Withdrawal;
+use App\Models\Deposit;
 use DB;
 //use Illuminate\Foundation\Bus\DispatchesJobs;
 //use Illuminate\Routing\Controller as BaseController;
@@ -236,14 +231,17 @@ trait BCPTrait{
     {
        
     //fetch settings
-    $settings=settings::where('id','1')->first();
+    $settings=Settings::where('id','1')->first();
     
-    $user=users::where('tele_id',$ui)->first();
+    $user=User::where('tele_id',$ui)->first();
         
-	//fetch Coinpayment merchant credentials
-    $cpd=cp_transactions::where('id','1')->first();
-    
-    	$this->Setup($cpd->cp_pv_key, $cpd->cp_p_key);
+//fetch Coinpayment merchant credentials
+    $cpd=Cp_transaction::where('id','1')->first();
+    if(!$cpd || !$cpd->cp_pv_key || !$cpd->cp_p_key){
+        echo "Autoconfirm: CoinPayments is not configured yet.";
+        return;
+    }
+    $this->Setup($cpd->cp_pv_key, $cpd->cp_p_key);
 	
 	if($coin=='ETH'){
 	    $address=$settings->eth_address;
@@ -273,7 +271,7 @@ trait BCPTrait{
 	$txn_id = $result['result']['txn_id'];
 	
 	//store transacton details in DB
-	$txn=new cp_transactions();
+	$txn=new Cp_transaction();
     
       $txn->txn_id= $txn_id;
       $txn->item_name= 'Account deposit';
@@ -312,15 +310,18 @@ trait BCPTrait{
     public function cpaywithcp(){
        
      //fetch settings
-    $settings=settings::where('id','1')->first();
+    $settings=Settings::where('id','1')->first();
         
    //fetch Coinpayment merchant credentials
-    $cpd=cp_transactions::where('id','1')->first();
-    
+    $cpd=Cp_transaction::where('id','1')->first();
+    if(!$cpd || !$cpd->cp_pv_key || !$cpd->cp_p_key){
+        echo "Autoconfirm: CoinPayments is not configured yet.";
+        return;
+    }
     $this->Setup($cpd->cp_pv_key, $cpd->cp_p_key);
     
     //fetch Coinpayment unconfirmed txns
-    $cp_txns=cp_transactions::where('status',NULL)->get();
+    $cp_txns=Cp_transaction::where('status',NULL)->get();
     if(count($cp_txns) > 0){
     
     foreach($cp_txns as $txn){
@@ -339,18 +340,18 @@ trait BCPTrait{
         // payment is complete
         
         //Update txn info on cp_txns
-       cp_transactions::where('id',$txn->id)
+       Cp_transaction::where('id',$txn->id)
        ->update([
        'status' => $result['result']['status'],
        'status_text' => $result['result']['status_text'],
        ]);
       
         //get user
-         $user=users::where('tele_id',$txn->user_tele_id)->first();
+         $user=User::where('tele_id',$txn->user_tele_id)->first();
                 
                   
       //save withdrawal info
-      $dp=new withdrawals();
+      $dp=new Withdrawal();
                 
       $dp->amount= $txn->amount_paid;
       $dp->payment_mode= 'CoinPayments';
@@ -377,20 +378,20 @@ trait BCPTrait{
         // payment is complete or queued for nightly payout, success
         
         //Update txn info on cp_txns
-       cp_transactions::where('id',$txn->id)
+       Cp_transaction::where('id',$txn->id)
        ->update([
        'status' => $result['result']['status'],
        'status_text' => $result['result']['status_text'],
        ]);
       
         //get user
-         $user=users::where('tele_id',$txn->user_tele_id)->first();
+         $user=User::where('tele_id',$txn->user_tele_id)->first();
          //get plan
-       $dps=user_plans::where('id',$txn->user_plan)->first();
-       $dp=plans::where('id',$dps->plan)->first();
+       $dps=User_plans::where('id',$txn->user_plan)->first();
+       $dp=Plans::where('id',$dps->plan)->first();
                     
        //confirm user plan
-       user_plans::where('id',$txn->user_plan)
+       User_plans::where('id',$txn->user_plan)
        //->where('plan',$user->plan)
        ->update([
        'amount' => $txn->amount_paid,
@@ -400,7 +401,7 @@ trait BCPTrait{
        ]);
                   
       //save deposit info
-      $dp=new deposits();
+      $dp=new Deposit();
         
       $dp->txn_id= $txn_id;            
       $dp->amount= $txn->amount_paid;
@@ -414,19 +415,19 @@ trait BCPTrait{
       //give % to referral
       if(!empty($user->ref_by) || $user->ref_by !="0"){
          //fetch site settings
-      $settings=settings::where('id','1')->first();
+      $settings=Settings::where('id','1')->first();
       //start to Process referral
       $ref_by_link=$settings->bot_link."?start=$user->ref_by";
       //get the referral
-      $duser=users::where('ref_link',$ref_by_link)->first();
+      $duser=User::where('ref_link',$ref_by_link)->first();
       
       //increment the user's earnings
       $earnings=$settings->referral_commission*$txn->amount_paid/100;
-      agents::where('agent',$duser->id)->increment('earnings', $earnings);
+      Agent::where('agent',$duser->id)->increment('earnings', $earnings);
                   
                   
       //Add ref earning to the users account balance
-      users::where('id', $duser->id)
+      User::where('id', $duser->id)
       ->update([
       'account_bal'=>$duser->account_bal+$earnings,
       ]);
@@ -438,7 +439,7 @@ trait BCPTrait{
     } else if ($status < 0) {
         //payment error, this is usually final but payments will sometimes be reopened if there was no exchange rate conversion or with seller consent
         //Update txn info on cp_txns
-       cp_transactions::where('id',$txn->id)
+       Cp_transaction::where('id',$txn->id)
        ->update([
        'status' => $result['result']['status'],
        'status_text' => $result['result']['status_text'],
@@ -446,7 +447,7 @@ trait BCPTrait{
     } else {
         //payment is pending, you can optionally add a note to the order page
         //Update txn info on cp_txns
-       cp_transactions::where('id',$txn->id)
+       Cp_transaction::where('id',$txn->id)
        ->update([
        //'status' => $result['result']['status'],
        'status_text' => $result['result']['status_text'],
@@ -475,9 +476,9 @@ trait BCPTrait{
     
     public function cpwithdraw($amount, $coin, $wallet, $ui, $to_withdraw){
     //fetch Coinpayment merchant credentials
-    $cpd=cp_transactions::where('id','1')->first();
+    $cpd=Cp_transaction::where('id','1')->first();
     //get settings
-    $settings=settings::where('id','1')->first();
+    $settings=Settings::where('id','1')->first();
     	$this->Setup($cpd->cp_pv_key, $cpd->cp_p_key);
     	
     	$amount=$amount;
@@ -494,9 +495,9 @@ trait BCPTrait{
     		$stts=$result['result']['status'];
     		
     		//fetch user
-    		$user=users::where('tele_id',$ui)->first();
+    		$user=User::where('tele_id',$ui)->first();
     		 //save withdrawal info
-                      $dp=new withdrawals();
+                      $dp=new Withdrawal();
                       
                       $dp->txn_id= $txn_id;         
                       $dp->amount= $amount;
@@ -507,7 +508,7 @@ trait BCPTrait{
                       $dp->save();
 
         	//store transacton details in DB
-        	$txn=new cp_transactions();
+        	$txn=new Cp_transaction();
             
               $txn->txn_id= $txn_id;
               $txn->item_name= 'Funds withdrawal';

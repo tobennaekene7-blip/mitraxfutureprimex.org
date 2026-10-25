@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{$settings->site_name}} | {{$settings->site_title}}</title>
-    <link rel="icon" href="{{ asset('storage/app/public/photos/'.$settings->favicon)}}" type="image/png"/>
+    <link rel="icon" href="{{ $settings->favicon_url }}" type="image/png"/>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
@@ -47,7 +47,7 @@
 
       <div class="row justify-content-center">
         <div class="col-xl-11 d-flex align-items-center">
-            <a href="#intro" class="mr-auto logo"><img src="{{ asset('storage/app/public/photos/'.$settings->logo)}}" alt="{{$settings->site_name}}" title="" class="img-fluid" /></a>
+            <a href="#intro" class="mr-auto logo"><img src="{{ $settings->logo_url }}" alt="{{$settings->site_name}}" title="" class="img-fluid" /></a>
 
           <nav class="nav-menu d-none d-lg-block">
             <ul>
@@ -107,7 +107,7 @@
         <div class="carousel-inner" role="listbox"  >
           
           <div class="carousel-item active">
-            <div class="carousel-background"><img src="{{ asset('storage/app/public/photos/'.$content->getImage('57VnOE','img_path'))}}" alt=""></div>
+            <div class="carousel-background"><img src="{{ asset('storage/photos/'.$content->getImage('57VnOE','img_path'))}}" alt=""></div>
             <div class="carousel-container">
               <div class="carousel-content">
                 <h2>{{$content->getContent('toe3Ew','title')}}</h2>
@@ -118,7 +118,7 @@
           </div>
 
           <div class="carousel-item">
-            <div class="carousel-background"><img src="{{ asset('storage/app/public/photos/'.$content->getImage('dC6ZaA','img_path'))}}" alt="" ></div>
+            <div class="carousel-background"><img src="{{ asset('storage/photos/'.$content->getImage('dC6ZaA','img_path'))}}" alt="" ></div>
             <div class="carousel-container">
               <div class="carousel-content">
                 <h2>{{$content->getContent('jJwh78','title')}}</h2>
@@ -129,7 +129,7 @@
           </div>
 
           <div class="carousel-item">
-            <div class="carousel-background"><img src="{{ asset('storage/app/public/photos/'.$content->getImage('9kHash','img_path'))}}" alt="">
+            <div class="carousel-background"><img src="{{ asset('storage/photos/'.$content->getImage('9kHash','img_path'))}}" alt="">
             <div class="carousel-container">
               <div class="carousel-content">
                 <h2>{{$content->getContent('SLxaB2','title')}}</h2>
@@ -141,7 +141,7 @@
           </div>
 
           <div class="carousel-item">
-            <div class="carousel-background"><img src="{{ asset('storage/app/public/photos/'.$content->getImage('CcW52g','img_path'))}}" alt=""></div>
+            <div class="carousel-background"><img src="{{ asset('storage/photos/'.$content->getImage('CcW52g','img_path'))}}" alt=""></div>
             <div class="carousel-container">
               <div class="carousel-content">
                 <h2>{{$content->getContent('BkP8pH','title')}}</h2>
@@ -152,7 +152,7 @@
           </div>
 
           <div class="carousel-item">
-            <div class="carousel-background"><img src="{{asset('storage/app/public/photos/'.$content->getImage('96i7xH','img_path'))}}" alt=""></div>
+            <div class="carousel-background"><img src="{{asset('storage/photos/'.$content->getImage('96i7xH','img_path'))}}" alt=""></div>
             <div class="carousel-container">
               <div class="carousel-content">
                 <h2>{{$content->getContent('W6gTBN','title')}}</h2>

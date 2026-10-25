@@ -2,18 +2,7 @@
 namespace App\Http\Controllers;
 namespace App\Http\Traits;
 
-use App\agents;
-use App\users;
-use App\settings;
-use App\plans;
-use App\account;
-use App\cp_transactions;
-use App\tp_transactions;
-use App\user_plans;
-use App\deposits;
-use App\assets;
-use App\investments;
-use App\withdrawals;
+use App\Models\Settings;
 use DB;
 
 
@@ -27,7 +16,7 @@ trait assetstrait{
     //Get any coin, any currency rate
     public function get_rates($coin,$currency,$option){
         //get settings
-        $settings=settings::where('id','1')->first();
+        $settings=Settings::where('id','1')->first();
         
        $url = "https://api.cryptonator.com/api/ticker/$coin-$currency";
        $curl_handle=curl_init();

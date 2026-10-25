@@ -72,13 +72,21 @@ class WithdrawalController extends Controller
             'withdrawotp' => $code,
         ]);
 
+        $settings = Settings::where('id', '1')->first();
         $objDemo = new \stdClass();
         $objDemo->message = "You have initiated a withdrawal request, use the OTP below to complete your request.";
         $objDemo->sender = $settings->site_name;
         $objDemo->otpcode = $code;
         $objDemo->date = \Carbon\Carbon::Now();
         $objDemo->subject ="OTP Request";
-        Mail::bcc(Auth::user()->email)->send(new NewNotification($objDemo));
+        try {
+            Mail::bcc(Auth::user()->email)->send(new NewNotification($objDemo));
+        } catch (\Throwable $e) {
+            // Mail transport may be unavailable (e.g. SMTP not configured yet).
+            // The OTP was already persisted above, so degrade gracefully instead of 500.
+            return redirect()->back()
+                ->with('message', 'OTP generated, but the email could not be sent. Check your mail settings or contact support.');
+        }
         return redirect()->back()
             ->with('success', 'Action Sucessful! OTP have been sent to your email');
     }

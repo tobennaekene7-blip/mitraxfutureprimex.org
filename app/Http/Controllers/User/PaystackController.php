@@ -50,6 +50,11 @@ class PaystackController extends Controller
 
     public function handleGatewayCallback()
     {
+        $paystackConfig = \App\Models\Paystack::where('id', '1')->first();
+        if (!$paystackConfig || empty($paystackConfig->paystack_secret_key)) {
+            return redirect()->route('dashboard')->with('message', 'Paystack is not configured yet. Please contact support.');
+        }
+
         $paymentDetails = Paystack::getPaymentData();
         //dd($paymentDetails);
         $payamount = $paymentDetails['data']['amount'];

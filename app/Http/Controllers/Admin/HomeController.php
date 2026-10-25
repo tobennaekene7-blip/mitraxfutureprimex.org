@@ -210,15 +210,8 @@ class HomeController extends Controller
        //return settings form
     public function settings(Request $request){
         include'currencies.php';
-        return view('admin.settings')->with(array(
-          
-          'wmethods' => Wdmethod::where('type', 'withdrawal')->get(),
-          'assets' => Asset::all(),
-          //'markets' => markets::all(),
-          'cpd' => Cp_transaction::where('id', '=', '1')->first(),
-          'currencies' => $currencies,
-          'title' =>'System Settings'));
-        //return view('settings')->with(array('title' =>'System Settings'));
+        // The settings hub was split into the sub-pages under admin/settings.
+        return redirect()->route('appsettingshow');
       }
 
       public function msubtrade()

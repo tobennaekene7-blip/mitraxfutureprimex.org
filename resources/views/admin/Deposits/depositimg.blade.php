@@ -31,7 +31,7 @@ if (Auth('admin')->User()->dashboard_style  == "light") {
                                     <span class="text-danger">{{$deposit->proof}}</span>
                                 </h3>
                             @elseif($settings->location == "Local")
-                                <img src="{{ asset('storage/app/public/photos/'.$deposit->proof)}}" alt="Proof of Payment" class="img-fluid" />
+                                <img src="{{ asset('storage/photos/'.$deposit->proof)}}" alt="Proof of Payment" class="img-fluid" />
                             @else
                                 @php
                                 $ppath = 'storage/'. $deposit->proof;

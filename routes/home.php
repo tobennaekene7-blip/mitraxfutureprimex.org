@@ -30,10 +30,6 @@ Route::get('howtobuy', function(){
     return view('home.howtobuy');
 });
 
-Route::get('shares', function(){
-    return view('home.shares');
-});
-
 Route::get('statistic', function(){
     return view('home.statistics');
 });

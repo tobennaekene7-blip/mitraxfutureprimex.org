@@ -8,7 +8,7 @@
         <title>{{$settings->site_name}} | @yield('title')</title>
         
         
-        <link rel="icon" href="{{ asset('storage/app/public/photos/'.$settings->favicon)}}" type="image/png"/>
+        <link rel="icon" href="{{ $settings->favicon_url }}" type="image/png"/>
         @section('styles')
            
             <link href="{{ asset('temp/css/bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
