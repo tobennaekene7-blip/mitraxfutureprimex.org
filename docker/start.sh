@@ -10,6 +10,10 @@ php artisan view:clear || true
 # Apply pending migrations and ensure the admin account exists (idempotent).
 # Safe to run on every boot: Laravel tracks applied migrations and the
 # seeder only inserts/refreshes the configured admin row.
+# The baseline step marks legacy migrations as applied on databases that were
+# imported with their schema but no `migrations` rows; without it `migrate`
+# aborts on the first already-existing table and newer migrations never run.
+php /var/www/html/docker/baseline-migrations.php || true
 php artisan migrate --force || true
 php artisan db:seed --class=DatabaseSeeder --force || true
 chown -R www-data:www-data storage bootstrap/cache
