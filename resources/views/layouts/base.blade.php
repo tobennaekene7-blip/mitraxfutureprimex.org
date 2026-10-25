@@ -58,7 +58,9 @@
               
             <div class="container"> 
               <div class="header__row">
+                @unless(request()->routeIs('home'))
                 <a class="header__logo" href="index"><img src="{{ asset('dash/images/mitrax-logo-for-dark-bg.png') }}" alt="{{ $settings->site_name }}"></a>
+                @endunless
                 <nav class="header__nav"> 
                   <ul>
                     <li class=" is-active"><a href="index">Home page </a></li>
@@ -172,7 +174,9 @@
         <!-- Mega menu-->
         <div class="mega-menu"> 
           <div class="container">
-            <div class="mega-menu__top"> <a class="mega-menu__logo" href="index"><img src="{{ asset('dash/images/mitrax-logo-for-dark-bg.png') }}" alt=""></a>
+            <div class="mega-menu__top"> @unless(request()->routeIs('home'))
+              <a class="mega-menu__logo" href="index"><img src="{{ asset('dash/images/mitrax-logo-for-dark-bg.png') }}" alt=""></a>
+              @endunless
             </div>
             <div class="mega-menu__row"> 
               <div class="mega-menu__col">
