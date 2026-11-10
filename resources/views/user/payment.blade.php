@@ -245,29 +245,17 @@
 													@endif
 											@endif
 										</div>
-										@if ($settings->deposit_option == "auto" and $payment_mode->defaultpay != 'yes')
-											<div>
+										{{-- Always let people confirm a manual payment (crypto or bank), whatever the deposit setting. --}}
+										@if(!in_array($payment_mode->name, ['Paystack', 'Stripe', 'Paypal']) and $title !="Complete Payment")
+											<div class="mt-3">
 												<form method="post" action="{{route('savedeposit')}}">
 													@csrf
 													<input type="hidden" name="amount" value="{{$amount}}">
 													<input type="hidden" name="paymethd_method" value="{{$payment_mode->name}}">
 
 													<div class="form-group">
-														<input type="submit" class="btn btn-{{$text}}" value="Submit Payment">
-													</div> 
-												</form>
-											</div>
-										@endif
-										@if($settings->deposit_option == "manual" and $payment_mode->name != "Paystack" and $payment_mode->name != "Stripe" and $payment_mode->name != "Paypal" and $title !="Complete Payment")
-											<div>
-												<form method="post" action="{{route('savedeposit')}}">
-													@csrf
-													<input type="hidden" name="amount" value="{{$amount}}">
-													<input type="hidden" name="paymethd_method" value="{{$payment_mode->name}}">
-
-													<div class="form-group">
-														<input type="submit" class="btn btn-{{$text}}" value="Submit Payment">
-													</div> 
+														<button type="submit" class="px-5 btn btn-success btn-lg">Submit Payment</button>
+													</div>
 												</form>
 											</div>
 										@endif
